@@ -2,11 +2,15 @@
 import React, { useState } from "react";
 import navbarimg from "../../public/navbarimg.png";
 import { MdMenuOpen } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 
 
 const Navbar = ({ setIsSidebarOpen }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <nav className=" sticky top-0 z-40 bg-[#89898938] text-white shadow-md backdrop-blur-md">
@@ -51,11 +55,40 @@ const Navbar = ({ setIsSidebarOpen }) => {
             >
               Settings
             </a>
-            <img
-              src={navbarimg}
-              alt="User"
-              className="cursor-pointer w-8 h-8 rounded-full"
-            />
+              <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                className="focus:outline-none"
+              >
+                <img
+                  src={navbarimg}
+                  alt="User"
+                  className="cursor-pointer w-8 h-8 rounded-full"
+                />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white text-[#6C5CD3] rounded shadow-lg py-2 z-50">
+                  <button
+                    onClick={() => { setIsDropdownOpen(false); navigate("/profile"); }}
+                    className="block w-full text-left px-4 py-2 hover:bg-[#6C5CD3] hover:text-white transition"
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    onClick={() => { setIsDropdownOpen(false); navigate("/login"); }}
+                    className="block w-full text-left px-4 py-2 hover:bg-[#6C5CD3] hover:text-white transition"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => { setIsDropdownOpen(false); navigate("/register"); }}
+                    className="block w-full text-left px-4 py-2 hover:bg-[#6C5CD3] hover:text-white transition"
+                  >
+                    Register
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="md:hidden">

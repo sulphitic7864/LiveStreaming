@@ -27,7 +27,7 @@ const Sidebar = () => {
     { icon: trending, label: "Trending", href: "" },
     { icon: user, label: "Following", href: "" },
     { icon: video, label: "Your videos", href: "" },
-    { icon: playboard, label: "Profile", href: "" },
+    { icon: playboard, label: "Profile", href: "/profile"},
   ];
 
   const followingList = [
