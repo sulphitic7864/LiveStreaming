@@ -9,6 +9,7 @@ import Register from "./components/pages/Register";
 import Profile from "./components/pages/Profile";
 import Navbar from "./components/Navbar";
 import { IoMdClose } from "react-icons/io";
+import VideoDetail from "./components/VideoDetail"; 
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -55,6 +56,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<ProfileWithUser />} />
+            <Route path="/videos/:id" element={<VideoDetail />} />
           </Routes>
         </div>
       </div>

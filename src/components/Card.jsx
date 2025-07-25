@@ -3,6 +3,7 @@ import { FaUser } from "react-icons/fa";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoWifiSharp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 function Card() {
   const [videos, setVideos] = useState([]);
@@ -10,6 +11,7 @@ function Card() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
+  const navigate = useNavigate();
 
   const isValidUrl = (url) => {
     if (!url) return false;
@@ -19,6 +21,10 @@ function Card() {
     } catch {
       return false;
     }
+  };
+
+  const handleVideoClick = (videoId) => {
+    navigate(`/videos/${videoId}`);
   };
 
   const fetchVideos = useCallback(async () => {
@@ -117,6 +123,7 @@ function Card() {
             key={`${video.id}-${index}`}
             className="bg-[#89898938] clip-polygon overflow-hidden shadow-md relative pb-4"
             style={{ boxShadow: "inset 0 0 10px #6C5CD380" }}
+            onClick={() => handleVideoClick(video.id)}
           >
             <div className="w-full h-[280px] relative clip-polygon">
               <img
