@@ -31,15 +31,15 @@ const Profile = ({ user }) => {
         <h2 className="text-2xl font-bold mb-6 text-[#6C5CD3]">My Profile</h2>
         <div className="flex flex-col items-center">
           <img
-            src={user.profileImage || "/default-profile.png"}
+            src={user?.profile_picture ? user.profile_picture : "/navbarimg.png"}
             alt="Profile"
             className="w-20 h-20 rounded-full mb-4 object-cover"
             onError={(e) => {
-              e.target.src = "/default-profile.png";
+              e.target.src = "/navbarimg.png";
             }}
           />
           <p className="text-lg font-semibold text-[#6C5CD3] mb-2">
-            {user.name || user.username || "Unknown User"}
+            {user.name || "User"}
           </p>
           <p className="text-gray-600 mb-4">{user.email || "No email provided"}</p>
           <button

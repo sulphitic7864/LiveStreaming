@@ -69,10 +69,4 @@ const ProfileWithUser = () => {
 };
 
 // Wrap your App with BrowserRouter in your main.jsx or index.jsx
-export default function WrappedApp() {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-}
+export default App;
