@@ -10,6 +10,7 @@ import Profile from "./components/pages/Profile";
 import Navbar from "./components/Navbar";
 import { IoMdClose } from "react-icons/io";
 import VideoDetail from "./components/VideoDetail"; 
+import Live from "./components/pages/Live";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -57,6 +58,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<ProfileWithUser />} />
             <Route path="/videos/:id" element={<VideoDetail />} />
+            <Route exact path="/live" element={<Live />} />
           </Routes>
         </div>
       </div>

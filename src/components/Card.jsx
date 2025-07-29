@@ -121,7 +121,7 @@ function Card() {
           <div
             ref={videos.length === index + 1 ? lastVideoRef : null}
             key={`${video.id}-${index}`}
-            className="bg-[#89898938] clip-polygon overflow-hidden shadow-md relative pb-4"
+             className="bg-[#89898938] clip-polygon overflow-hidden shadow-md relative pb-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:bg-[#6C5CD320] cursor-pointer"
             style={{ boxShadow: "inset 0 0 10px #6C5CD380" }}
             onClick={() => handleVideoClick(video.id)}
           >

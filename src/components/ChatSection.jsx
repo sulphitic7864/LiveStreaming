@@ -134,7 +134,7 @@ const ChatSection = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyPress}
-          className="flex-1 bg-white/10 rounded-md py-2 px-2 text-white placeholder-gray-400 outline-none"
+          className="flex-1 bg-white/10 rounded-md md:text-base  text-xs w-[70%] py-2 px-2 text-white placeholder-gray-400 outline-none"
         />
 
         <button

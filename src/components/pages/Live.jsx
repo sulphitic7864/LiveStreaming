@@ -1,0 +1,24 @@
+import React from "react";
+import VideoSection from "../VideoSection";
+import InfoSection from "../InfoSection";
+import LiveChat from "../LiveChat";
+import LiveCards from '../LiveCards'
+
+function Live() {
+  return (
+       <div>
+          <div className="flex items-start gap-5 md:p-5 p-0 xl:flex-row flex-col">
+            <div className="xl:w-[70%] w-full">
+              <VideoSection />
+              <InfoSection />
+            </div>
+            <div className="xl:w-[30%] w-full">
+              <LiveChat />
+            </div>
+          </div>
+             <LiveCards/>
+        </div>
+  )
+}
+
+export default Live
