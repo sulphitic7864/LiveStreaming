@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import About from "./components/pages/About";
 import Navbar from "./components/Navbar";
 import { IoMdClose } from "react-icons/io";
+import Live from "./components/pages/Live";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -46,6 +47,7 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Home />} />
               <Route exact path="/detail" element={<About />} />
+              <Route exact path="/live" element={<Live />} />
             </Routes>
           </div>
         </div>
