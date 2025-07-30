@@ -23,8 +23,12 @@ function Card() {
     }
   };
 
-  const handleVideoClick = (videoId) => {
-    navigate(`/videos/${videoId}`);
+  // const handleVideoClick = (videoId) => {
+  //   navigate(`/videos/${videoId}`);
+  // };
+  const handleVideoClick = (video) => {
+    console.log("Video clicked:", video);
+    navigate("/live", { state: { video } });
   };
 
   const fetchVideos = useCallback(async () => {
@@ -43,7 +47,9 @@ function Card() {
       }
 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/videos?page=${page}&per_page=6`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/videos?page=${page}&per_page=6`,
         {
           method: "GET",
           headers: headers,
@@ -67,7 +73,10 @@ function Card() {
         const cleanVideos = data.data.data.map((video, index) => ({
           ...video,
           id: video.id || `fallback-${index}`,
-          thumbnail: video.thumbnail && isValidUrl(video.thumbnail) ? video.thumbnail : null,
+          thumbnail:
+            video.thumbnail && isValidUrl(video.thumbnail)
+              ? video.thumbnail
+              : null,
         }));
         setVideos((prev) => [...prev, ...cleanVideos]);
         setPage((prev) => prev + 1);
@@ -121,13 +130,15 @@ function Card() {
           <div
             ref={videos.length === index + 1 ? lastVideoRef : null}
             key={`${video.id}-${index}`}
-             className="bg-[#89898938] clip-polygon overflow-hidden shadow-md relative pb-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:bg-[#6C5CD320] cursor-pointer"
+            className="bg-[#89898938] clip-polygon overflow-hidden shadow-md relative pb-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:bg-[#6C5CD320] cursor-pointer"
             style={{ boxShadow: "inset 0 0 10px #6C5CD380" }}
             onClick={() => handleVideoClick(video.id)}
           >
             <div className="w-full h-[280px] relative clip-polygon">
               <img
-                src={isValidUrl(video.thumbnail) ? video.thumbnail : "/card1.png"}
+                src={
+                  isValidUrl(video.thumbnail) ? video.thumbnail : "/card1.png"
+                }
                 alt={video.title}
                 className="w-full h-full object-cover rounded-t-[20px]"
                 onError={(e) => {
@@ -174,7 +185,9 @@ function Card() {
       </div>
 
       {loading && (
-        <div className="text-white text-center py-4">Loading more videos...</div>
+        <div className="text-white text-center py-4">
+          Loading more videos...
+        </div>
       )}
 
       {!hasMore && (
