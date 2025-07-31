@@ -1,6 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 
+// Updated color styles configuration
+const messageStyles = {
+  red: {
+    bg: "bg-red-800/50",     
+    border: "border-l-red-500",
+    tag: "bg-red-900"          
+  },
+  yellow: {
+    bg: "bg-yellow-800/50",     
+    border: "border-l-yellow-500",
+    tag: "bg-yellow-900"
+  },
+  blue: {
+    bg: "bg-blue-800/50",
+    border: "border-l-blue-500",
+    tag: "bg-blue-900"
+  },
+  default: {  // Fallback style
+    bg: "bg-gray-800/50",
+    border: "border-l-gray-500",
+    tag: "bg-gray-900"
+  }
+};
+
 const LiveChat = ({ videoId, initialMessages = [] }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -11,6 +35,10 @@ const LiveChat = ({ videoId, initialMessages = [] }) => {
     setMessages(initialMessages);
   }, [initialMessages]);
 
+const getMessageStyle = (message) => {
+    const color = message.color || message.user?.color;
+    return messageStyles[color] || messageStyles.default;
+  };
   // Get token from localStorage
   const getToken = () => {
     return localStorage.getItem("token");
@@ -22,7 +50,7 @@ const LiveChat = ({ videoId, initialMessages = [] }) => {
     try {
       setError(null);
       const token = getToken();
-      
+
       if (!token) {
         throw new Error("You need to be logged in to comment");
       }
@@ -45,7 +73,9 @@ const LiveChat = ({ videoId, initialMessages = [] }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
       }
 
       const data = await response.json();
@@ -58,10 +88,10 @@ const LiveChat = ({ videoId, initialMessages = [] }) => {
         created_at: data.data.created_at,
         user: {
           id: data.data.user_id,
-          name: data.data.name
-        }
+          name: data.data.name,
+        },
       };
-      setMessages(prev => [...prev, newMsg]);
+      setMessages((prev) => [...prev, newMsg]);
       setNewMessage("");
       setShowEmojis(false);
     } catch (err) {
@@ -96,25 +126,32 @@ const LiveChat = ({ videoId, initialMessages = [] }) => {
         ) : messages.length === 0 ? (
           <div className="text-white text-center">No comments yet</div>
         ) : (
-          messages.map((msg) => (
-            <div
-              key={msg.id}
-              className="rounded-lg p-3 border-l-4 bg-[#1F2937] border-l-[#0EA5E9]"
-            >
-              <div className="flex items-center gap-2 text-sm mb-1">
-                <span className="text-white px-2 py-0.5 rounded bg-[#111827] text-xs font-semibold">
-                  {msg.user?.name || msg.name || "Anonymous"}
-                </span>
-                <span className="text-gray-400 text-xs">
-                  {new Date(msg.created_at).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+          messages.map((msg) => {
+            const style = getMessageStyle(msg);
+            return (
+              <div
+                key={msg.id}
+                className={`rounded-lg p-3 border-l-4 ${style.bg} ${style.border}`}
+              >
+                <div className="flex items-center gap-2 text-sm mb-1">
+                  <span
+                    className={`text-white px-2 py-0.5 rounded ${style.tag} text-xs font-semibold`}
+                  >
+                    {msg.user?.name || msg.name || "Anonymous"}
+                  </span>
+                  <span className="text-gray-400 text-xs">
+                    {new Date(msg.created_at).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+                <p className="text-white text-sm leading-relaxed">
+                  {msg.content}
+                </p>
               </div>
-              <p className="text-white text-sm leading-relaxed">{msg.content}</p>
-            </div>
-          ))
+            );
+          })
         )}
         <div ref={messagesEndRef} />
       </div>

@@ -32,7 +32,6 @@ function Live() {
         }
 
         const data = await response.json();
-        console.log("Fetched video data:", data);
         setVideo(data);
       } catch (err) {
         setError(err.message);
