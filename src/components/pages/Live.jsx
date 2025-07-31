@@ -14,7 +14,6 @@ function Live() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log("Video ID from state:", videoId);
     const fetchVideoDetails = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -55,7 +54,7 @@ function Live() {
       <div className="flex items-start gap-5 md:p-5 p-0 xl:flex-row flex-col">
         <div className="xl:w-[70%] w-full">
           <VideoSection video={video} />
-          <InfoSection videoId={videoId} />
+          <InfoSection video={video} />
         </div>
         <div className="xl:w-[30%] w-full">
           <LiveChat 

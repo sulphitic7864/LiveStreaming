@@ -24,7 +24,7 @@ export default function VideoSection({ video }) {
           {video.data.title || "Untitled Video"}
         </h2>
         
-        <div className="flex items-center gap-3 mt-3">
+        {/* <div className="flex items-center gap-3 mt-3">
           <div className="flex-shrink-0">
             {video.user?.profile_picture ? (
               <img
@@ -55,7 +55,7 @@ export default function VideoSection({ video }) {
           <p className="text-[#9CA3AF] pt-2">
             {video.data.description || "No description available"}
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
