@@ -1,13 +1,15 @@
-// LiveChat.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 
 const LiveChat = ({ videoId, initialMessages = [] }) => {
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages]);
 
   // Get token from localStorage
   const getToken = () => {
@@ -47,7 +49,6 @@ const LiveChat = ({ videoId, initialMessages = [] }) => {
       }
 
       const data = await response.json();
-      // Transform the new message response to match the initial messages structure
       const newMsg = {
         id: data.data.id,
         user_id: data.data.user_id,

@@ -4,7 +4,8 @@ import { useLocation } from "react-router-dom";
 import VideoSection from "../VideoSection";
 import InfoSection from "../InfoSection";
 import LiveChat from "../LiveChat";
-import LiveCards from '../LiveCards'
+import LiveCards from '../LiveCards';
+import Card from '../Card';
 
 function Live() {
   const location = useLocation();
@@ -63,7 +64,8 @@ function Live() {
           />
         </div>
       </div>
-      <LiveCards />
+      {/* <LiveCards /> */}
+      <Card />
     </div>
   );
 }
