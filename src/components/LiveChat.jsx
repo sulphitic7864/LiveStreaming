@@ -1,79 +1,72 @@
+// LiveChat.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 
-const LiveChat = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: "DragonMaster_Kai",
-      time: "14:23",
-      text: "Welcome to the dragon's lair, brave adventurers! 🐉",
-      color: "bg-[#3B1C1C]",
-      tagColor: "bg-[#7F1D1D]",
-      borderColor: "border-l-[#B91C1C]",
-    },
-    {
-      id: 2,
-      sender: "MythicModerator",
-      time: "14:24",
-      text: "Remember to follow the realm rules!",
-      color: "bg-[#3F3A1A]",
-      tagColor: "bg-[#A16207]",
-      borderColor: "border-l-[#EAB308]",
-    },
-    {
-      id: 3,
-      sender: "FireBreather99",
-      time: "14:25",
-      text: "This quest looks epic!🔥",
-      color: "bg-[#1F2937]",
-      tagColor: "bg-[#111827]",
-      borderColor: "border-l-[#0EA5E9]",
-    },
-    {
-      id: 4,
-      sender: "AzureWings",
-      time: "14:26",
-      text: "Those dragon animations are incredible!",
-      color: "bg-[#1E3A44]",
-      tagColor: "bg-[#0F172A]",
-      borderColor: "border-l-[#38BDF8]",
-    },
-    {
-      id: 5,
-      sender: "GoldenScales",
-      time: "14:27",
-      text: "First time here, loving the mythical vibes ✨",
-      color: "bg-[#1F2937]",
-      tagColor: "bg-[#111827]",
-      borderColor: "border-l-[#FACC15]",
-    },
-  ]);
-
+const LiveChat = ({ videoId, initialMessages = [] }) => {
+  const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
+  const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
 
-  const sendMessage = () => {
-    if (!newMessage.trim()) return;
+  // Get token from localStorage
+  const getToken = () => {
+    return localStorage.getItem("token");
+  };
 
-    setMessages([
-      ...messages,
-      {
-        id: messages.length + 1,
-        sender: "You",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        text: newMessage,
-        color: "bg-[#2E2E2E]",
-        tagColor: "bg-[#6C5CD3]",
-        borderColor: "border-l-[#6C5CD3]",
-      },
-    ]);
-    setNewMessage("");
-    setShowEmojis(false);
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !videoId) return;
+
+    try {
+      setError(null);
+      const token = getToken();
+      
+      if (!token) {
+        throw new Error("You need to be logged in to comment");
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/videos/${videoId}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            video_id: videoId,
+            type: "comment",
+            content: newMessage,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Transform the new message response to match the initial messages structure
+      const newMsg = {
+        id: data.data.id,
+        user_id: data.data.user_id,
+        video_id: data.data.video_id,
+        type: data.data.type,
+        content: data.data.content,
+        created_at: data.data.created_at,
+        user: {
+          id: data.data.user_id,
+          name: data.data.name
+        }
+      };
+      setMessages(prev => [...prev, newMsg]);
+      setNewMessage("");
+      setShowEmojis(false);
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setError(err.message || "Failed to send message. Please try again.");
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -86,33 +79,42 @@ const LiveChat = () => {
 
   return (
     <div
-      className=" h-[540px] bg-[#0f0f0f] border border-[#FF444433] rounded-xl flex flex-col justify-between"
+      className="h-[540px] bg-[#0f0f0f] border border-[#FF444433] rounded-xl flex flex-col justify-between"
       style={{ fontFamily: "sans-serif" }}
     >
       <div className="border-b border-[#2a2a2a] px-4 py-3">
         <h2 className="text-white text-lg font-bold font-cinzel">
-          🐉 Dragon’s Chamber
+          🐉 Live Chat
         </h2>
-        <p className="text-gray-400 text-sm">2,847 dragons online</p>
+        <p className="text-gray-400 text-sm">Live comments</p>
       </div>
 
       <div className="flex-1 px-3 py-4 space-y-3 overflow-y-auto custom-scrollbar">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`rounded-lg p-3 border-l-4 ${msg.color} ${msg.borderColor}`}
-          >
-            <div className="flex items-center gap-2 text-sm mb-1">
-              <span
-                className={`text-white px-2 py-0.5 rounded ${msg.tagColor} text-xs font-semibold`}
-              >
-                {msg.sender}
-              </span>
-              <span className="text-gray-400 text-xs">{msg.time}</span>
+        {error ? (
+          <div className="text-red-500 text-center p-2">{error}</div>
+        ) : messages.length === 0 ? (
+          <div className="text-white text-center">No comments yet</div>
+        ) : (
+          messages.map((msg) => (
+            <div
+              key={msg.id}
+              className="rounded-lg p-3 border-l-4 bg-[#1F2937] border-l-[#0EA5E9]"
+            >
+              <div className="flex items-center gap-2 text-sm mb-1">
+                <span className="text-white px-2 py-0.5 rounded bg-[#111827] text-xs font-semibold">
+                  {msg.user?.name || msg.name || "Anonymous"}
+                </span>
+                <span className="text-gray-400 text-xs">
+                  {new Date(msg.created_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+              <p className="text-white text-sm leading-relaxed">{msg.content}</p>
             </div>
-            <p className="text-white text-sm leading-relaxed">{msg.text}</p>
-          </div>
-        ))}
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -138,7 +140,7 @@ const LiveChat = () => {
 
         <input
           type="text"
-          placeholder="Share your thoughts with 🐉"
+          placeholder="Share your thoughts..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyPress}
@@ -154,6 +156,7 @@ const LiveChat = () => {
         <button
           onClick={sendMessage}
           className="bg-[#FF4444] hover:bg-red-600 text-white p-2 rounded-md"
+          disabled={!newMessage.trim()}
         >
           <FaPaperPlane size={14} />
         </button>
