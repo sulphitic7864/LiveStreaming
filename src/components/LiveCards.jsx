@@ -3,7 +3,6 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { IoWifiSharp } from "react-icons/io5";
-
 const cardsData = [
   {
     id: 1,
